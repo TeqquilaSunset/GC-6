@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tao.FreeGlut;
 using Tao.OpenGl;
+using static System.Windows.Forms.AxHost;
 
 namespace GC_6
 {
@@ -22,12 +23,16 @@ namespace GC_6
         //цвета для каждой точки
         readonly float[] colors = {1,0,0.7f, 1,0,0, 1,0,0, 1,0.75f,0, 0,1,0, 0.5f,0,1, 0,1,0, 1,0.5f,1,};
 
-        readonly float[] pyramid = {-0.5f,0,-0.5f, -1,0,0, 0,0,-1, 1,0,0.5f, 0.5f,0,0.5f, 0,1,0};
+        //readonly float[] pyramid = {-0.5f,0,-0.5f, -1,0,0, 0,0,-1, 1,0,0.5f, 0.5f,0,0.5f, 0,1,0};
         readonly uint[] indexPyramid1 = { 0,1,2,3,4 };
-        readonly uint[] indexPyramid2 = {0,5,1, 1,5,2, 2,5,3, 3,5,4, 4,5,0};
+        readonly uint[] indexPyramid2 = { 0,1,5, 1,2,5, 2,3,5, 3,4,5, 4,0,5};
+        //readonly uint[] indexPyramid2 = {0,5,1, 1,5,2, 2,5,3, 3,5,4, 4,5,0};
 
         //флаг запуска таймера 
         bool flag = false;
+
+        float anglc = 0;
+        float anglp = 0;
         public Form1()
         {
             InitializeComponent();
@@ -36,7 +41,7 @@ namespace GC_6
             //Gl.glBlendFunc(Gl.GL_SRC_ALPHA, Gl.GL_ONE_MINUS_SRC_ALPHA);
             //Gl.glEnable(Gl.GL_BLEND);
 
-            //буфер глубины для отсичения
+            //буфер глубины для отсечения
             Gl.glEnable(Gl.GL_DEPTH_TEST);
 
             //начальное и конечное значение для осей
@@ -49,11 +54,27 @@ namespace GC_6
             holst.Invalidate();
         }
 
+        private float[] Polygon(int n, float r)
+        {
+            float[] array = new float[18];
+            int angel = 360 / (n * 2);
+
+            for (int i = 0; i < n*3; i+=3)
+            {
+                array[i] = r * (float)Math.Cos((angel * Math.PI) / 180);
+                array[i+1] = r * (float)Math.Sin((angel * Math.PI) / 180);
+                array[i+2] = 0;
+                angel += 360 / n;
+            }
+            //array[17] = 0.75f;
+            array[17] = 0.5f;
+            return array;
+        }
+
         private void simpleOpenGlControl1_Load(object sender, EventArgs e)
         {
             Draw();
         }
-
 
         private void Draw()
         {
@@ -61,39 +82,53 @@ namespace GC_6
             Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT);
 
             Gl.glPushMatrix();
-            Gl.glEnableClientState(Gl.GL_VERTEX_ARRAY); //используем массив вершин
-            //Gl.glEnableClientState(Gl.GL_COLOR_ARRAY);
+            DrawCube();
+            Gl.glPopMatrix();
 
+            Gl.glPushMatrix();
+            DrawPyramid();
+            Gl.glPopMatrix();
+        }
+
+        private void DrawCube()
+        {
+            Gl.glEnableClientState(Gl.GL_VERTEX_ARRAY); //используем массив вершин
             Gl.glVertexPointer(3, Gl.GL_FLOAT, 0, cube); //в качестве массива вершин используем
-            Gl.glColorPointer(3, Gl.GL_FLOAT, 0, colors);
             Gl.glTranslated(-0.5, -0.5, 0);
-            // массив вершин строится по индексам
-            //Gl.glColor3f(0.8f, 0.8f, 0.8f);
-            //Gl.glDrawArrays(Gl.GL_QUADS, 0, 4);
-            //Gl.glColor3f(1, 1, 1);
-            //Gl.glDrawElements(Gl.GL_QUADS, 24, Gl.GL_UNSIGNED_INT, index);
             Gl.glColor3f(0, 0, 0);
             Gl.glLineWidth(4);
+            Gl.glRotatef(anglc, 1, 1, 1);
             Gl.glDrawElements(Gl.GL_LINES, 32, Gl.GL_UNSIGNED_INT, index);
-
-
-            Gl.glVertexPointer(3, Gl.GL_FLOAT, 0, pyramid);
-            Gl.glColor3f(1, 0, 1);
-            Gl.glDrawElements(Gl.GL_POLYGON, 5, Gl.GL_UNSIGNED_INT, indexPyramid1);
             Gl.glDisableClientState(Gl.GL_VERTEX_ARRAY);
 
-            Gl.glPopMatrix();
-            //Gl.glDisableClientState(Gl.GL_COLOR_ARRAY);
 
+            holst.Invalidate();
+        }
+
+        private void DrawPyramid()
+        {
+            Gl.glEnableClientState(Gl.GL_VERTEX_ARRAY);
+
+            //Gl.glPushMatrix();
+            Gl.glVertexPointer(3, Gl.GL_FLOAT, 0, Polygon(5, 0.45f));
+            Gl.glColor3f(1, 0, 1);
+            Gl.glRotatef(-90, 1, 0, 0);
+            Gl.glTranslatef(0, -0.5f, -0.20f);
+            Gl.glRotatef(anglp, 1, 1, 1);
+            Gl.glDrawElements(Gl.GL_POLYGON, 5, Gl.GL_UNSIGNED_INT, indexPyramid1);
+            Gl.glColor3f(0, 1, 1);
+            Gl.glDrawElements(Gl.GL_TRIANGLES, 16, Gl.GL_UNSIGNED_INT, indexPyramid2);
+            //Gl.glPopMatrix();
+            Gl.glDisableClientState(Gl.GL_VERTEX_ARRAY);
             holst.Invalidate();
         }
 
         private void Rotate(float x, float y, float z)
         {
-            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
-            Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT);
+            //Gl.glPushMatrix();
             Gl.glRotatef(2, x, y, z);
-            Draw();
+            DrawCube();
+            //Gl.glPopMatrix();
         }
 
         private void holst_KeyDown(object sender, KeyEventArgs e)
@@ -141,7 +176,9 @@ namespace GC_6
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Rotate(1f,1f,1f);
+            anglc++;
+            anglp += 2;
+            Draw();
         }
     }
 }
