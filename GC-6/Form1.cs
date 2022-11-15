@@ -34,8 +34,10 @@ namespace GC_6
             //буфер глубины для отсичения
             Gl.glEnable(Gl.GL_DEPTH_TEST);
 
+            Gl.glLoadIdentity();
             //начальное и конечное значение для осей
             Gl.glOrtho(-2, 2, -2, 2, -2, 2);
+            //Gl.glFrustum(-2,2, -2,2, -2,10);
 
             Gl.glViewport(0, 0, holst.Width, holst.Height);
             Gl.glClearColor(255, 255, 255, 1);
@@ -47,6 +49,7 @@ namespace GC_6
         private void simpleOpenGlControl1_Load(object sender, EventArgs e)
         {
             Draw();
+            //Gl.glTranslated(-0.5, -0.5, -2);
         }
 
 
@@ -132,7 +135,7 @@ namespace GC_6
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            Rotate(1f,1f,1f);
+            Rotate(1,0,0);
         }
     }
 }
