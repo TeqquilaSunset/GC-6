@@ -59,7 +59,7 @@ namespace GC_6
 
         private float[] Polygon(int n, float r)
         {
-            float[] array = new float[18];
+            float[] array = new float[(n+1) * 3];
             int angel = 360 / (n * 2);
 
             for (int i = 0; i < n*3; i+=3)
@@ -70,7 +70,7 @@ namespace GC_6
                 angel += 360 / n;
             }
             //array[17] = 0.75f;
-            array[17] = 0.5f;
+            array[(n + 1) * 3 -1] = 0.5f;
             return array;
         }
 
