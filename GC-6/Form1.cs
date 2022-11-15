@@ -21,10 +21,15 @@ namespace GC_6
         readonly uint[] index = {0,1,2,3, 0,1,5,4, 4,5,6,7, 2,3,7,6, 1,2,6,5, 0,3,7,4, 1,5, 0,4, 3,7, 2,6 };
 
         //цвета для каждой точки
-        readonly float[] colors = {1,0,0.7f, 1,0,0, 1,0,0, 1,0.75f,0, 0,1,0, 0.5f,0,1, 0,1,0, 1,0.5f,1,};
+        readonly float[] colors = {1,0,0, 1,0,0, 1,0,0, 0,0,0, 0,0,0, 0,0,0,};
 
         readonly uint[] indexPyramid1 = { 0,1,2,3,4 };
-        readonly uint[] indexPyramid2 = { 0,1,5, 1,2,5, 2,3,5, 3,4,5, 4,0,5};
+        // костыль для разных цветов
+        readonly uint[] indexPyramid2 = { 0,1,5 };
+        readonly uint[] indexPyramid3 = { 1,2,5 };
+        readonly uint[] indexPyramid4 = { 2,3,5 };
+        readonly uint[] indexPyramid5 = { 3,4,5 };
+        readonly uint[] indexPyramid6 = { 4,0,5 };
 
         //флаг запуска таймера 
         bool flag = false;
@@ -106,13 +111,24 @@ namespace GC_6
         {
             Gl.glEnableClientState(Gl.GL_VERTEX_ARRAY);
             Gl.glVertexPointer(3, Gl.GL_FLOAT, 0, Polygon(5, 0.45f));
-            Gl.glColor3f(1, 0, 1);
             Gl.glRotatef(-90, 1, 0, 0);
             Gl.glTranslatef(0, -0.5f, -0.20f);
-            Gl.glRotatef(anglp, 1, 1, 1);
+            Gl.glRotatef(anglp, -1, 0, 0);
+            Gl.glColor3f(1, 0, 1);
             Gl.glDrawElements(Gl.GL_POLYGON, 5, Gl.GL_UNSIGNED_INT, indexPyramid1);
-            Gl.glColor3f(0, 1, 1);
-            Gl.glDrawElements(Gl.GL_TRIANGLES, 16, Gl.GL_UNSIGNED_INT, indexPyramid2);
+
+
+            Gl.glColor3f(1, 0, 0);
+            Gl.glDrawElements(Gl.GL_TRIANGLES, 3, Gl.GL_UNSIGNED_INT, indexPyramid2);
+            Gl.glColor3f(0, 1, 0);
+            Gl.glDrawElements(Gl.GL_TRIANGLES, 3, Gl.GL_UNSIGNED_INT, indexPyramid3);
+            Gl.glColor3f(0, 0, 1);
+            Gl.glDrawElements(Gl.GL_TRIANGLES, 3, Gl.GL_UNSIGNED_INT, indexPyramid4);
+            Gl.glColor3f(0.5f, 0, 0.75f);
+            Gl.glDrawElements(Gl.GL_TRIANGLES, 3, Gl.GL_UNSIGNED_INT, indexPyramid5);
+            Gl.glColor3f(0, 0.6f, 1);
+            Gl.glDrawElements(Gl.GL_TRIANGLES, 3, Gl.GL_UNSIGNED_INT, indexPyramid6);
+
             Gl.glDisableClientState(Gl.GL_VERTEX_ARRAY);
 
             holst.Invalidate();
