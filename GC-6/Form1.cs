@@ -19,14 +19,12 @@ namespace GC_6
         readonly float[] cube = { 0,0,0, 0,1,0, 1,1,0, 1,0,0, 0,0,1, 0,1,1, 1,1,1, 1,0,1 };
         //соединение точек кубика
         readonly uint[] index = {0,1,2,3, 0,1,5,4, 4,5,6,7, 2,3,7,6, 1,2,6,5, 0,3,7,4, 1,5, 0,4, 3,7, 2,6 };
-        //readonly uint[] index = {1,0,2,3, 1,0,5,4, 5,4,6,7, 6,7,2,3, 1,2,5,6, 0,3,4,7};
+
         //цвета для каждой точки
         readonly float[] colors = {1,0,0.7f, 1,0,0, 1,0,0, 1,0.75f,0, 0,1,0, 0.5f,0,1, 0,1,0, 1,0.5f,1,};
 
-        //readonly float[] pyramid = {-0.5f,0,-0.5f, -1,0,0, 0,0,-1, 1,0,0.5f, 0.5f,0,0.5f, 0,1,0};
         readonly uint[] indexPyramid1 = { 0,1,2,3,4 };
         readonly uint[] indexPyramid2 = { 0,1,5, 1,2,5, 2,3,5, 3,4,5, 4,0,5};
-        //readonly uint[] indexPyramid2 = {0,5,1, 1,5,2, 2,5,3, 3,5,4, 4,5,0};
 
         //флаг запуска таймера 
         bool flag = false;
@@ -101,15 +99,12 @@ namespace GC_6
             Gl.glDrawElements(Gl.GL_LINES, 32, Gl.GL_UNSIGNED_INT, index);
             Gl.glDisableClientState(Gl.GL_VERTEX_ARRAY);
 
-
             holst.Invalidate();
         }
 
         private void DrawPyramid()
         {
             Gl.glEnableClientState(Gl.GL_VERTEX_ARRAY);
-
-            //Gl.glPushMatrix();
             Gl.glVertexPointer(3, Gl.GL_FLOAT, 0, Polygon(5, 0.45f));
             Gl.glColor3f(1, 0, 1);
             Gl.glRotatef(-90, 1, 0, 0);
@@ -118,17 +113,9 @@ namespace GC_6
             Gl.glDrawElements(Gl.GL_POLYGON, 5, Gl.GL_UNSIGNED_INT, indexPyramid1);
             Gl.glColor3f(0, 1, 1);
             Gl.glDrawElements(Gl.GL_TRIANGLES, 16, Gl.GL_UNSIGNED_INT, indexPyramid2);
-            //Gl.glPopMatrix();
             Gl.glDisableClientState(Gl.GL_VERTEX_ARRAY);
-            holst.Invalidate();
-        }
 
-        private void Rotate(float x, float y, float z)
-        {
-            //Gl.glPushMatrix();
-            Gl.glRotatef(2, x, y, z);
-            DrawCube();
-            //Gl.glPopMatrix();
+            holst.Invalidate();
         }
 
         private void holst_KeyDown(object sender, KeyEventArgs e)
@@ -137,27 +124,27 @@ namespace GC_6
                 Application.Exit();
             if (e.KeyCode == Keys.Q)
             {
-                Rotate(1f, 0, 0);
+                Draw();
             }
             if (e.KeyCode == Keys.E)
             {
-                Rotate(-1f, 0, 0);
+                Draw();
             }
             if (e.KeyCode == Keys.W)
             {
-                Rotate(0, 1f, 0);
+                Draw();
             }
             if (e.KeyCode == Keys.S)
             {
-                Rotate(0, -1f, 0);
+                Draw();
             }
             if (e.KeyCode == Keys.A)
             {
-                Rotate(0, 0, 1f);
+                Draw();
             }
             if (e.KeyCode == Keys.D)
             {
-                Rotate(0, 0, -1f);
+                Draw();
             }
             if (e.KeyCode == Keys.Space)
             {
