@@ -34,14 +34,16 @@ namespace GC_6
             //буфер глубины для отсичения
             Gl.glEnable(Gl.GL_DEPTH_TEST);
 
+            Gl.glMatrixMode(Gl.GL_PROJECTION);
             Gl.glLoadIdentity();
             //начальное и конечное значение для осей
-            Gl.glOrtho(-2, 2, -2, 2, -2, 2);
-            //Gl.glFrustum(-2,2, -2,2, -2,10);
+            //Gl.glOrtho(-2, 2, -2, 2, -2, 2);
+            Gl.glFrustum(-2, 2, -2, 2, 2, 20);
 
             Gl.glViewport(0, 0, holst.Width, holst.Height);
             Gl.glClearColor(255, 255, 255, 1);
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
+            Gl.glTranslated(0, 0, -4);
             Draw();
             holst.Invalidate();
         }
@@ -49,7 +51,6 @@ namespace GC_6
         private void simpleOpenGlControl1_Load(object sender, EventArgs e)
         {
             Draw();
-            //Gl.glTranslated(-0.5, -0.5, -2);
         }
 
 
@@ -90,6 +91,14 @@ namespace GC_6
             Draw();
         }
 
+        private void Translate(float z)
+        {
+            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT);
+            Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT);
+            Gl.glTranslated(0, 0, z);
+            Draw();
+        }
+
         private void holst_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
@@ -117,6 +126,14 @@ namespace GC_6
             if (e.KeyCode == Keys.D)
             {
                 Rotate(0, 0, -1f);
+            }
+            if (e.KeyCode == Keys.Z)
+            {
+                Translate(-0.2f);
+            }
+            if (e.KeyCode == Keys.X)
+            {
+                Translate(0.2f);
             }
             if (e.KeyCode == Keys.Space)
             {
