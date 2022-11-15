@@ -21,6 +21,11 @@ namespace GC_6
         //readonly uint[] index = {1,0,2,3, 1,0,5,4, 5,4,6,7, 6,7,2,3, 1,2,5,6, 0,3,4,7};
         //цвета для каждой точки
         readonly float[] colors = {1,0,0.7f, 1,0,0, 1,0,0, 1,0.75f,0, 0,1,0, 0.5f,0,1, 0,1,0, 1,0.5f,1,};
+
+        readonly float[] pyramid = {-0.5f,0,-0.5f, -1,0,0, 0,0,-1, 1,0,0.5f, 0.5f,0,0.5f, 0,1,0};
+        readonly uint[] indexPyramid1 = { 0,1,2,3,4 };
+        readonly uint[] indexPyramid2 = {0,5,1, 1,5,2, 2,5,3, 3,5,4, 4,5,0};
+
         //флаг запуска таймера 
         bool flag = false;
         public Form1()
@@ -63,17 +68,21 @@ namespace GC_6
             Gl.glColorPointer(3, Gl.GL_FLOAT, 0, colors);
             Gl.glTranslated(-0.5, -0.5, 0);
             // массив вершин строится по индексам
-            Gl.glColor3f(0.8f, 0.8f, 0.8f);
-            Gl.glDrawArrays(Gl.GL_QUADS, 0, 4);
-            Gl.glColor3f(1, 1, 1);
-            Gl.glDrawElements(Gl.GL_QUADS, 24, Gl.GL_UNSIGNED_INT, index);
+            //Gl.glColor3f(0.8f, 0.8f, 0.8f);
+            //Gl.glDrawArrays(Gl.GL_QUADS, 0, 4);
+            //Gl.glColor3f(1, 1, 1);
+            //Gl.glDrawElements(Gl.GL_QUADS, 24, Gl.GL_UNSIGNED_INT, index);
             Gl.glColor3f(0, 0, 0);
             Gl.glLineWidth(4);
             Gl.glDrawElements(Gl.GL_LINES, 32, Gl.GL_UNSIGNED_INT, index);
 
 
-            Gl.glPopMatrix();
+            Gl.glVertexPointer(3, Gl.GL_FLOAT, 0, pyramid);
+            Gl.glColor3f(1, 0, 1);
+            Gl.glDrawElements(Gl.GL_POLYGON, 5, Gl.GL_UNSIGNED_INT, indexPyramid1);
             Gl.glDisableClientState(Gl.GL_VERTEX_ARRAY);
+
+            Gl.glPopMatrix();
             //Gl.glDisableClientState(Gl.GL_COLOR_ARRAY);
 
             holst.Invalidate();
